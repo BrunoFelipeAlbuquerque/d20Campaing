@@ -203,14 +203,14 @@ Those differences exist in the repository, but they are not the source of truth 
 
 ## Current Status Matrix
 
-This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 automatic racial language path, and the current P7 bonus-language composition gap.
+This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 automatic and bonus racial language paths, and the current P7 minimum language creation-slice gap.
 
 | Area | Exists | Core-correct now | Intentional limit | Project-specific note |
 | --- | --- | --- | --- | --- |
 | `ability` | yes | carrying capacity, hit point averages, explicit HP base dice, core construct HP table, and core size ladder behavior are aligned for the current surface | not a full combat-state engine | `Titanic`, dual imperial/metric size measurements, source-based caster levels |
 | `creaturetype` | yes | supported base types and the currently supported subtype effects resolve structurally | partial subtype coverage and partial trait model by design | none beyond project-specific sizes if a caller uses them |
-| `character` | yes | composition helpers for race, class, HP, spellcasting progression, spell-list entries, feat prerequisites, selected carryable equipment, carried weight, racial ability composition, character level facts, base attack bonus facts, base saving throw facts, class HP ledger facts, automatic racial language facts, and a refreshed class-level derived creation slice | not a full character aggregate yet | none |
-| `language` | yes | core common language identities are seeded with secret-language metadata | identity/query surface only; no character language selection yet | none |
+| `character` | yes | composition helpers for race, class, HP, spellcasting progression, spell-list entries, feat prerequisites, selected carryable equipment, carried weight, racial ability composition, character level facts, base attack bonus facts, base saving throw facts, class HP ledger facts, automatic and bonus racial language facts, and a refreshed class-level derived creation slice | not a full character aggregate yet | none |
+| `language` | yes | core common language identities are seeded with secret-language metadata | identity/query surface only; character language selection composes in `character` | none |
 | `race` | yes | 7 core races seeded with lookup helpers and automatic/bonus language metadata | core seed/query slice only | none |
 | `modifier` | yes | validated modifier chassis, stacking resolution, and usable target/condition refs | not full downstream composition yet | none |
 | `skill` | yes | core catalog seeded with public lookup and grouped specializations accepted by the domain | not skill-rank composition yet | none |
@@ -399,7 +399,7 @@ That work will likely interact with:
 - composed Intelligence facts
 - race-specific bonus language eligibility
 
-The next executable backlog item is bonus language selections from race and Intelligence at the `character` boundary. Keep it adapter-focused: no secret languages, campaign-specific languages, social checks, language-dependent spell effects, or non-core content.
+The next executable backlog item is refreshing the minimum level-1 character creation slice for languages. Keep it test-only and adapter-focused: include fixed-list and any-non-secret bonus-language races, fail closed on over-budget or disallowed choices, and do not add a full character aggregate.
 
 ## Philosophy In One Sentence
 
