@@ -17,8 +17,8 @@ Order of work:
 3. resolution/query logic
 4. character composition
 
-As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, P7 core character language composition with slice coverage, and the first P8 skill rank allocation fact and budget slices are present. Check `BACKLOG.md` for exact unchecked work.
-The next planned area is P8 skill-rank validation against budget and level cap; later non-core work is intentionally deferred.
+As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, P7 core character language composition with slice coverage, and the P8 skill rank allocation fact, budget, and validation slices are present. Check `BACKLOG.md` for exact unchecked work.
+The next planned area is feeding validated skill ranks into feat prerequisite state; later non-core work is intentionally deferred.
 
 ---
 
@@ -80,6 +80,7 @@ Current character-boundary adapters:
 - `character_language.go`: automatic and bonus racial language facts
 - `character_skill_rank_allocation.go`: concrete skill rank allocation facts
 - `character_skill_rank_budget.go`: skill-rank budget facts from class levels, Intelligence, and supported racial metadata
+- `character_skill_rank_allocation_facts.go`: selected skill rank validation against budget and character-level caps
 - `racial_hit_points.go`: creature rules to racial HP bridge
 
 Keep composition thin. If logic belongs to a lower domain, add it there only when the backlog item requires it.
@@ -90,7 +91,7 @@ Keep composition thin. If logic belongs to a lower domain, add it there only whe
 
 The next core-only backlog path is P8 core skill rank allocation.
 
-The P7 core character language path is complete, and the P8 skill rank allocation fact and budget slices are present. Continue by validating selected skill ranks against budget and level cap at the `character` boundary.
+The P7 core character language path is complete, and the P8 skill rank allocation fact, budget, and validation slices are present. Continue by feeding validated skill rank allocations into feat prerequisite state at the `character` boundary.
 
 Check `BACKLOG.md` before starting any far-future non-core item.
 
