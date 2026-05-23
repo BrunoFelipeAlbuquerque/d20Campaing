@@ -136,6 +136,36 @@ func NewCharacterFeatPrerequisiteState(
 	)
 }
 
+func NewCharacterFeatPrerequisiteStateWithSkillRankAllocationFacts(
+	abilityScores []CharacterAbilityScore,
+	baseAttackBonus int,
+	casterLevels []CharacterCasterLevel,
+	classLevels []CharacterClassLevel,
+	classFeatures []characterclass.ClassFeatureID,
+	skillRankAllocations CharacterSkillRankAllocationFacts,
+	feats []characterfeat.FeatID,
+) (CharacterFeatPrerequisiteState, bool) {
+	skillRanks, ok := characterSkillRanksFromAllocationFacts(skillRankAllocations)
+	if !ok {
+		return characterFeatPrerequisiteState{}, false
+	}
+
+	return newCharacterFeatPrerequisiteState(
+		abilityScores,
+		baseAttackBonus,
+		casterLevels,
+		classLevels,
+		classFeatures,
+		skillRanks,
+		characterSelectedWeapon{},
+		nil,
+		characterSelectedSpellSchool{},
+		nil,
+		characterSelectedFamiliarEligibility{},
+		feats,
+	)
+}
+
 func NewCharacterFeatPrerequisiteStateWithSelectedWeapon(
 	abilityScores []CharacterAbilityScore,
 	baseAttackBonus int,
@@ -730,6 +760,57 @@ func buildCharacterSkillRankMap(values []CharacterSkillRanks) (map[skill.SkillID
 	}
 
 	return result, true
+}
+
+func characterSkillRanksFromAllocationFacts(
+	facts CharacterSkillRankAllocationFacts,
+) ([]CharacterSkillRanks, bool) {
+	if !isValidCharacterSkillRankAllocationFacts(facts) {
+		return nil, false
+	}
+
+	allocations := facts.GetAllocations()
+	skillRanks := make([]CharacterSkillRanks, 0, len(allocations))
+	groupedFamilyRanks := make(map[skill.SkillID]int)
+
+	for _, allocation := range allocations {
+		allocatedRanks, ok := NewCharacterSkillRanks(allocation.GetSkillID(), allocation.GetRanks())
+		if !ok {
+			return nil, false
+		}
+
+		skillRanks = append(skillRanks, allocatedRanks)
+
+		allocatedSkill, ok := allocation.GetSkill()
+		if !ok {
+			return nil, false
+		}
+
+		if _, ok := allocatedSkill.GetSpecialization(); !ok {
+			continue
+		}
+
+		familyID := allocatedSkill.GetFamilyID()
+		if allocation.GetRanks() > groupedFamilyRanks[familyID] {
+			groupedFamilyRanks[familyID] = allocation.GetRanks()
+		}
+	}
+
+	for _, coreSkill := range skill.GetSkills() {
+		ranks, ok := groupedFamilyRanks[coreSkill.GetID()]
+		if !ok {
+			continue
+		}
+
+		familyRanks, ok := NewCharacterSkillRanks(coreSkill.GetID(), ranks)
+		if !ok {
+			return nil, false
+		}
+
+		skillRanks = append(skillRanks, familyRanks)
+	}
+
+	return skillRanks, true
 }
 
 func buildCharacterSelectedWeapon(

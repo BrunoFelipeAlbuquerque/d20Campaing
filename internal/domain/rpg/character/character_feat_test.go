@@ -7,6 +7,7 @@ import (
 	characterclass "d20campaigngenerator/internal/domain/rpg/character/class"
 	characterequipment "d20campaigngenerator/internal/domain/rpg/character/equipment"
 	characterfeat "d20campaigngenerator/internal/domain/rpg/character/feat"
+	characterrace "d20campaigngenerator/internal/domain/rpg/character/race"
 	"d20campaigngenerator/internal/domain/rpg/character/skill"
 	characterspell "d20campaigngenerator/internal/domain/rpg/character/spell"
 )
@@ -106,6 +107,195 @@ func TestNewCharacterFeat_ComposesSkillRanksAndFeatPrerequisites(t *testing.T) {
 	)
 	if _, ok := NewCharacterFeat(characterfeat.MountedArcheryFeatID, missingSkillState); ok {
 		t.Fatal("expected mounted archery to reject missing ride ranks")
+	}
+}
+
+func TestNewCharacterFeatPrerequisiteStateWithSkillRankAllocationFacts_ComposesSeededSkillRankPrerequisites(t *testing.T) {
+	rideAllocations := mustNewCharacterSkillRankAllocationFactsForFeatPrerequisiteTest(
+		t,
+		characterclass.FighterClassID,
+		1,
+		10,
+		characterrace.ElfRaceID,
+		[]CharacterSkillRankAllocation{
+			mustNewCharacterSkillRankAllocationForFeatPrerequisiteTest(t, skill.RideSkillID, 1),
+		},
+	)
+
+	rideState, ok := NewCharacterFeatPrerequisiteStateWithSkillRankAllocationFacts(
+		nil,
+		0,
+		nil,
+		nil,
+		nil,
+		rideAllocations,
+		[]characterfeat.FeatID{characterfeat.MountedCombatFeatID},
+	)
+	if !ok {
+		t.Fatal("expected feat prerequisite state to compose from skill-rank allocations")
+	}
+
+	if _, ok := NewCharacterFeat(characterfeat.MountedArcheryFeatID, rideState); !ok {
+		t.Fatal("expected mounted archery to compose from allocated Ride ranks")
+	}
+
+	craftAlchemyAllocations := mustNewCharacterSkillRankAllocationFactsForFeatPrerequisiteTest(
+		t,
+		characterclass.WizardClassID,
+		5,
+		10,
+		characterrace.ElfRaceID,
+		[]CharacterSkillRankAllocation{
+			mustNewCharacterSkillRankAllocationForFeatPrerequisiteTest(t, skill.SkillID("Craft (alchemy)"), 5),
+		},
+	)
+
+	craftState, ok := NewCharacterFeatPrerequisiteStateWithSkillRankAllocationFacts(
+		nil,
+		0,
+		nil,
+		nil,
+		nil,
+		craftAlchemyAllocations,
+		nil,
+	)
+	if !ok {
+		t.Fatal("expected grouped skill allocation to feed feat prerequisite state")
+	}
+
+	if _, ok := NewCharacterFeat(characterfeat.MasterCraftsmanFeatID, craftState); !ok {
+		t.Fatal("expected master craftsman to compose from concrete Craft ranks")
+	}
+
+	splitCraftAllocations := mustNewCharacterSkillRankAllocationFactsForFeatPrerequisiteTest(
+		t,
+		characterclass.WizardClassID,
+		5,
+		10,
+		characterrace.ElfRaceID,
+		[]CharacterSkillRankAllocation{
+			mustNewCharacterSkillRankAllocationForFeatPrerequisiteTest(t, skill.SkillID("Craft (alchemy)"), 3),
+			mustNewCharacterSkillRankAllocationForFeatPrerequisiteTest(t, skill.SkillID("Craft (weapons)"), 2),
+		},
+	)
+
+	splitCraftState, ok := NewCharacterFeatPrerequisiteStateWithSkillRankAllocationFacts(
+		nil,
+		0,
+		nil,
+		nil,
+		nil,
+		splitCraftAllocations,
+		nil,
+	)
+	if !ok {
+		t.Fatal("expected split grouped skill allocations to feed feat prerequisite state")
+	}
+
+	if _, ok := NewCharacterFeat(characterfeat.MasterCraftsmanFeatID, splitCraftState); ok {
+		t.Fatal("expected master craftsman to reject split Craft ranks below the single-skill prerequisite")
+	}
+}
+
+func TestNewCharacterFeatPrerequisiteStateWithSkillRankAllocationFacts_RejectsMissingSkillRanks(t *testing.T) {
+	emptyAllocations := mustNewCharacterSkillRankAllocationFactsForFeatPrerequisiteTest(
+		t,
+		characterclass.FighterClassID,
+		1,
+		10,
+		characterrace.ElfRaceID,
+		nil,
+	)
+
+	state, ok := NewCharacterFeatPrerequisiteStateWithSkillRankAllocationFacts(
+		nil,
+		0,
+		nil,
+		nil,
+		nil,
+		emptyAllocations,
+		nil,
+	)
+	if !ok {
+		t.Fatal("expected empty allocated ranks to compose into feat prerequisite state")
+	}
+
+	if _, ok := NewCharacterFeat(characterfeat.MountedCombatFeatID, state); ok {
+		t.Fatal("expected mounted combat to reject missing allocated Ride ranks")
+	}
+}
+
+func TestNewCharacterFeatPrerequisiteStateWithSkillRankAllocationFacts_RejectsMalformedAllocationFacts(t *testing.T) {
+	testCases := []struct {
+		name        string
+		allocations CharacterSkillRankAllocationFacts
+	}{
+		{"zero facts", CharacterSkillRankAllocationFacts{}},
+		{
+			name: "unknown allocation",
+			allocations: CharacterSkillRankAllocationFacts{
+				valid:               true,
+				skillRankBudget:     1,
+				rankCap:             1,
+				totalAllocatedRanks: 1,
+				allocations: []CharacterSkillRankAllocation{
+					{skillID: skill.SkillID("Jump"), ranks: 1},
+				},
+			},
+		},
+		{
+			name: "over rank cap",
+			allocations: CharacterSkillRankAllocationFacts{
+				valid:               true,
+				skillRankBudget:     2,
+				rankCap:             1,
+				totalAllocatedRanks: 2,
+				allocations: []CharacterSkillRankAllocation{
+					{skillID: skill.RideSkillID, ranks: 2},
+				},
+			},
+		},
+		{
+			name: "inconsistent total",
+			allocations: CharacterSkillRankAllocationFacts{
+				valid:               true,
+				skillRankBudget:     2,
+				rankCap:             1,
+				totalAllocatedRanks: 2,
+				allocations: []CharacterSkillRankAllocation{
+					{skillID: skill.RideSkillID, ranks: 1},
+				},
+			},
+		},
+		{
+			name: "duplicate allocation",
+			allocations: CharacterSkillRankAllocationFacts{
+				valid:               true,
+				skillRankBudget:     2,
+				rankCap:             1,
+				totalAllocatedRanks: 2,
+				allocations: []CharacterSkillRankAllocation{
+					{skillID: skill.RideSkillID, ranks: 1},
+					{skillID: skill.RideSkillID, ranks: 1},
+				},
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			if _, ok := NewCharacterFeatPrerequisiteStateWithSkillRankAllocationFacts(
+				nil,
+				0,
+				nil,
+				nil,
+				nil,
+				tc.allocations,
+				nil,
+			); ok {
+				t.Fatal("expected feat prerequisite state to reject malformed allocation facts")
+			}
+		})
 	}
 }
 
@@ -1106,6 +1296,47 @@ func mustNewCharacterSkillRanksForTest(
 	}
 
 	return value
+}
+
+func mustNewCharacterSkillRankAllocationFactsForFeatPrerequisiteTest(
+	t *testing.T,
+	classID characterclass.ClassID,
+	level int,
+	intelligenceScore int,
+	raceID characterrace.RaceID,
+	allocations []CharacterSkillRankAllocation,
+) CharacterSkillRankAllocationFacts {
+	t.Helper()
+
+	budget := mustNewCharacterSkillRankBudgetFactsForValidationTest(
+		t,
+		classID,
+		level,
+		intelligenceScore,
+		raceID,
+	)
+
+	facts, ok := NewCharacterSkillRankAllocationFacts(budget, allocations)
+	if !ok {
+		t.Fatal("expected skill-rank allocation facts to compose")
+	}
+
+	return facts
+}
+
+func mustNewCharacterSkillRankAllocationForFeatPrerequisiteTest(
+	t *testing.T,
+	id skill.SkillID,
+	ranks int,
+) CharacterSkillRankAllocation {
+	t.Helper()
+
+	allocation, ok := NewCharacterSkillRankAllocation(id, ranks)
+	if !ok {
+		t.Fatalf("expected skill-rank allocation %q %d to compose", id, ranks)
+	}
+
+	return allocation
 }
 
 func mustNewCharacterSelectedWeaponFeatForTest(

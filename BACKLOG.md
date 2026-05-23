@@ -746,7 +746,7 @@ Do not expand this path into:
   - support concrete grouped skills already accepted by the `skill` domain
   - no final check totals or armor penalties
 
-- [ ] Feed allocated skill ranks into feat prerequisite state (resolution/query logic):
+- [X] Feed allocated skill ranks into feat prerequisite state (resolution/query logic):
   - convert validated rank allocations into existing `CharacterSkillRanks` facts
   - demonstrate a seeded core feat with skill-rank prerequisites
   - reject caller-provided malformed rank facts through the allocation path

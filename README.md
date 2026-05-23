@@ -203,13 +203,13 @@ Those differences exist in the repository, but they are not the source of truth 
 
 ## Current Status Matrix
 
-This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 core character language path, and the P8 skill-rank allocation fact, budget, and rank validation slices.
+This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 core character language path, and the completed P8 core skill-rank allocation path.
 
 | Area | Exists | Core-correct now | Intentional limit | Project-specific note |
 | --- | --- | --- | --- | --- |
 | `ability` | yes | carrying capacity, hit point averages, explicit HP base dice, core construct HP table, and core size ladder behavior are aligned for the current surface | not a full combat-state engine | `Titanic`, dual imperial/metric size measurements, source-based caster levels |
 | `creaturetype` | yes | supported base types and the currently supported subtype effects resolve structurally | partial subtype coverage and partial trait model by design | none beyond project-specific sizes if a caller uses them |
-| `character` | yes | composition helpers for race, class, HP, spellcasting progression, spell-list entries, feat prerequisites, selected carryable equipment, carried weight, racial ability composition, character level facts, base attack bonus facts, base saving throw facts, class HP ledger facts, automatic and bonus racial language facts, skill rank allocation, budget, and validation facts, refreshed class-level derived creation slice, and refreshed language creation slice | not a full character aggregate yet | none |
+| `character` | yes | composition helpers for race, class, HP, spellcasting progression, spell-list entries, feat prerequisites, selected carryable equipment, carried weight, racial ability composition, character level facts, base attack bonus facts, base saving throw facts, class HP ledger facts, automatic and bonus racial language facts, skill rank allocation, budget, validation, and prerequisite-feeding facts, refreshed class-level derived creation slice, and refreshed language creation slice | not a full character aggregate yet | none |
 | `language` | yes | core common language identities are seeded with secret-language metadata | identity/query surface only; character language selection composes in `character` | none |
 | `race` | yes | 7 core races seeded with lookup helpers and automatic/bonus language metadata | core seed/query slice only | none |
 | `modifier` | yes | validated modifier chassis, stacking resolution, and usable target/condition refs | not full downstream composition yet | none |
@@ -389,17 +389,17 @@ Invalid body shapes are rejected.
 
 The next major tracked backlog area is:
 
-- P8 core skill rank allocation
+- P9 core skill check totals
 
 That work will likely interact with:
 
-- selected core class levels
-- composed Intelligence facts
+- validated skill-rank allocations
+- ability score facts
 - core skill identities, including grouped skills
-- human Skilled racial metadata
-- feat prerequisite skill-rank inputs
+- class skill metadata
+- armor check penalty metadata
 
-The next executable backlog item is feeding allocated skill ranks into feat prerequisite state. Keep it resolution-focused: convert validated rank allocations into existing `CharacterSkillRanks` facts, demonstrate seeded feat prerequisites, and avoid feat allocation or final skill totals.
+The next executable backlog item is adding core skill ability-key metadata. Keep it domain-focused: expose each seeded skill ability key, share grouped family keys, and avoid rank allocation or check totals in the `skill` domain.
 
 ## Philosophy In One Sentence
 
