@@ -17,8 +17,8 @@ Order of work:
 3. resolution/query logic
 4. character composition
 
-As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, and the P6 class-level derived-fact adapters and slice refresh are present. Check `BACKLOG.md` for exact unchecked work.
-The next planned area is core character language composition; later non-core work is intentionally deferred.
+As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, and P7 automatic racial language facts are present. Check `BACKLOG.md` for exact unchecked work.
+The next planned area is core bonus-language composition; later non-core work is intentionally deferred.
 
 ---
 
@@ -77,6 +77,7 @@ Current character-boundary adapters:
 - `character_equipment.go`: selected carryable item lookup with quantity
 - `character_carried_weight.go`: carried equipment weight and load category from Strength
 - `character_race_ability.go`: fixed and selectable core racial ability composition
+- `character_language.go`: automatic racial language facts
 - `racial_hit_points.go`: creature rules to racial HP bridge
 
 Keep composition thin. If logic belongs to a lower domain, add it there only when the backlog item requires it.
@@ -87,7 +88,7 @@ Keep composition thin. If logic belongs to a lower domain, add it there only whe
 
 The next core-only backlog path is P7 core character languages.
 
-The P6 core class-level totals and base derived facts path is complete. Continue by composing automatic racial languages into character language facts at the `character` boundary.
+The P6 core class-level totals and base derived facts path is complete, and automatic racial language facts are present. Continue by composing bonus language selections from race and Intelligence at the `character` boundary.
 
 Check `BACKLOG.md` before starting any far-future non-core item.
 
