@@ -3,8 +3,11 @@ package character
 import "d20campaigngenerator/internal/domain/rpg/character/skill"
 
 type characterSkillRankAllocationFacts struct {
+	valid               bool
 	allocations         []CharacterSkillRankAllocation
 	totalAllocatedRanks int
+	skillRankBudget     int
+	rankCap             int
 }
 type CharacterSkillRankAllocationFacts = characterSkillRankAllocationFacts
 
@@ -25,8 +28,11 @@ func NewCharacterSkillRankAllocationFacts(
 	}
 
 	return characterSkillRankAllocationFacts{
+		valid:               true,
 		allocations:         validatedAllocations,
 		totalAllocatedRanks: totalAllocatedRanks,
+		skillRankBudget:     budget.GetTotalSkillRanks(),
+		rankCap:             budget.GetTotalCharacterLevel(),
 	}, true
 }
 
@@ -55,6 +61,50 @@ func (f characterSkillRankAllocationFacts) GetSkillRanks(id skill.SkillID) (int,
 func (f characterSkillRankAllocationFacts) HasSkillRankAllocation(id skill.SkillID) bool {
 	_, ok := f.GetSkillRanks(id)
 	return ok
+}
+
+func isValidCharacterSkillRankAllocationFacts(facts CharacterSkillRankAllocationFacts) bool {
+	if !facts.valid {
+		return false
+	}
+
+	if facts.rankCap <= 0 || facts.rankCap > maxCoreCharacterLevel {
+		return false
+	}
+
+	if facts.skillRankBudget <= 0 || facts.totalAllocatedRanks < 0 || facts.totalAllocatedRanks > facts.skillRankBudget {
+		return false
+	}
+
+	seen := make(map[skill.SkillID]struct{}, len(facts.allocations))
+	totalAllocatedRanks := 0
+
+	for _, allocation := range facts.allocations {
+		validatedAllocation, ok := NewCharacterSkillRankAllocation(
+			allocation.GetSkillID(),
+			allocation.GetRanks(),
+		)
+		if !ok {
+			return false
+		}
+
+		if _, ok := seen[validatedAllocation.GetSkillID()]; ok {
+			return false
+		}
+
+		if validatedAllocation.GetRanks() > facts.rankCap {
+			return false
+		}
+
+		totalAllocatedRanks += validatedAllocation.GetRanks()
+		if totalAllocatedRanks > facts.skillRankBudget {
+			return false
+		}
+
+		seen[validatedAllocation.GetSkillID()] = struct{}{}
+	}
+
+	return totalAllocatedRanks == facts.totalAllocatedRanks
 }
 
 func isValidCharacterSkillRankBudgetFacts(budget CharacterSkillRankBudgetFacts) bool {

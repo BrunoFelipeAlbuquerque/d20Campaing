@@ -17,8 +17,8 @@ Order of work:
 3. resolution/query logic
 4. character composition
 
-As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, P7 core character language composition with slice coverage, and the P8 skill rank allocation fact, budget, and validation slices are present. Check `BACKLOG.md` for exact unchecked work.
-The next planned area is feeding validated skill ranks into feat prerequisite state; later non-core work is intentionally deferred.
+As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, P7 core character language composition with slice coverage, and the P8 core skill rank allocation path are present. Check `BACKLOG.md` for exact unchecked work.
+The next planned area is P9 skill ability-key metadata and static skill check totals; later non-core work is intentionally deferred.
 
 ---
 
@@ -73,7 +73,7 @@ Current character-boundary adapters:
 - `character_class_hit_point_ledger.go`: explicit class HP ledger facts beyond first level
 - `character_spellcasting_progression.go`: class spellcasting progression access
 - `character_spell_list_entry.go`: class spell-list entry access
-- `character_feat.go`: feat prerequisite state and selected feat validation
+- `character_feat.go`: feat prerequisite state, validated skill-rank allocation feed, and selected feat validation
 - `character_equipment.go`: selected carryable item lookup with quantity
 - `character_carried_weight.go`: carried equipment weight and load category from Strength
 - `character_race_ability.go`: fixed and selectable core racial ability composition
@@ -89,20 +89,19 @@ Keep composition thin. If logic belongs to a lower domain, add it there only whe
 
 ## Next Backlog Path
 
-The next core-only backlog path is P8 core skill rank allocation.
+The next core-only backlog path is P9 core skill check totals.
 
-The P7 core character language path is complete, and the P8 skill rank allocation fact, budget, and validation slices are present. Continue by feeding validated skill rank allocations into feat prerequisite state at the `character` boundary.
+The P8 core skill rank allocation path is complete. Continue by adding core skill ability-key metadata in the `skill` domain before composing static skill check totals.
 
 Check `BACKLOG.md` before starting any far-future non-core item.
 
-The path should prove rank allocation facts, budget composition, level-cap validation, and feat prerequisite feeding before adding final skill check totals or armor penalties.
+The path should prove skill ability keys, static rank-and-ability totals, class-skill bonuses, trained-only availability, and armor check penalty application without adding skill-use DCs or roll behavior.
 
 Out of scope for this path:
 
-- final skill check totals
-- armor check penalties
-- aid another, taking 10/20, or skill-use DCs
-- retraining or favored class bonuses
+- skill-use DCs, opposed checks, take 10/20, or aid another
+- situational modifiers, conditions, spells, or magic items
+- movement or combat action resolution
 - non-core skills or traits
 - full mutable character aggregate
 - broad folder or package reorganization
