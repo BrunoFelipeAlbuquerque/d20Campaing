@@ -683,7 +683,7 @@ Do not expand this path into:
 - non-core races or languages
 - a full mutable character aggregate
 
-- [ ] Compose automatic racial languages into character language facts (resolution/query logic):
+- [X] Compose automatic racial languages into character language facts (resolution/query logic):
   - use selected core race automatic language metadata
   - reject zero-value or unknown races
   - expose deduped character language facts
