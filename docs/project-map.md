@@ -47,6 +47,7 @@ Do not bulk-read local rule text, solution notes, or internal role files unless 
 | --- | --- | --- |
 | `internal/domain/rpg/character/ability` | Primitive values and math: ability scores, BAB, saves, HP, size, speed, alignment, caster level | Must not import higher domains |
 | `internal/domain/rpg/character/creaturetype` | Structural creature rule resolution: type, subtype, traits, contextual flags | Structural only; not a full character engine |
+| `internal/domain/rpg/character/language` | Core common language identities and secret-language flags | Language identity/query only; character language selection composes in `character` |
 | `internal/domain/rpg/character/race` | Core race chassis, core race seeds, race lookup/query helpers | Race facts only; character choices compose elsewhere |
 | `internal/domain/rpg/character/skill` | Core skill chassis, grouped skill parsing, skill catalog lookup | Skill identity only; ranks compose elsewhere |
 | `internal/domain/rpg/character/class` | Core class chassis, class seeds, spellcasting progression tables, class feature/proficiency IDs | Class metadata only; final character stats compose elsewhere |

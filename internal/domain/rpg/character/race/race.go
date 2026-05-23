@@ -4,19 +4,19 @@ import (
 	"strings"
 
 	ability "d20campaigngenerator/internal/domain/rpg/character/ability"
+	characterlanguage "d20campaigngenerator/internal/domain/rpg/character/language"
 )
 
 type raceID string
 type RaceID = raceID
 
-type languageID string
-type LanguageID = languageID
+type LanguageID = characterlanguage.LanguageID
 
 type racialFeatureID string
 type RacialFeatureID = racialFeatureID
 
 type bonusLanguageChoice struct {
-	languageIDs  []languageID
+	languageIDs  []LanguageID
 	anyNonSecret bool
 }
 type BonusLanguageChoice = bonusLanguageChoice
@@ -33,7 +33,7 @@ type race struct {
 	baseSpeed                      int
 	abilityScoreModifiers          []abilityScoreModifier
 	selectableAbilityScoreModifier int
-	automaticLanguages             []languageID
+	automaticLanguages             []LanguageID
 	bonusLanguageChoice            bonusLanguageChoice
 	racialFeatures                 []racialFeatureID
 }
@@ -176,6 +176,20 @@ func (c bonusLanguageChoice) AllowsAnyNonSecret() bool {
 	return c.anyNonSecret
 }
 
+func (c bonusLanguageChoice) AllowsLanguageID(id LanguageID) bool {
+	if c.anyNonSecret && characterlanguage.IsNonSecretLanguageID(id) {
+		return true
+	}
+
+	for _, languageID := range c.languageIDs {
+		if languageID == id {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (r race) HasFeature(featureID RacialFeatureID) bool {
 	for _, current := range r.racialFeatures {
 		if current == featureID {
@@ -201,8 +215,7 @@ func isValidSize(value ability.Size) bool {
 }
 
 func isValidLanguageID(value LanguageID) bool {
-	_, ok := validLanguageIDs[value]
-	return ok
+	return characterlanguage.IsKnownLanguageID(value)
 }
 
 func isValidRacialFeatureID(value RacialFeatureID) bool {
