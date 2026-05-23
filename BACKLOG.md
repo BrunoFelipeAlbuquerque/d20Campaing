@@ -689,7 +689,7 @@ Do not expand this path into:
   - expose deduped character language facts
   - no bonus language selection or campaign language behavior
 
-- [ ] Compose bonus language selections from race and Intelligence (resolution/query logic):
+- [X] Compose bonus language selections from race and Intelligence (resolution/query logic):
   - use selected race bonus-language metadata
   - derive maximum bonus language choices from composed Intelligence modifier
   - support human and half-elf any non-secret language metadata

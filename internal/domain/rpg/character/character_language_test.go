@@ -3,6 +3,7 @@ package character
 import (
 	"testing"
 
+	ability "d20campaigngenerator/internal/domain/rpg/character/ability"
 	characterlanguage "d20campaigngenerator/internal/domain/rpg/character/language"
 	characterrace "d20campaigngenerator/internal/domain/rpg/character/race"
 )
@@ -116,6 +117,142 @@ func TestCharacterLanguagesFromIDs_DedupesAndRejectsMalformedLanguages(t *testin
 	}
 }
 
+func TestNewBonusRacialCharacterLanguageFacts_ComposesFixedListRaceFromIntelligence(t *testing.T) {
+	selectedRace := mustNewCharacterRaceForLanguageTest(t, characterrace.ElfRaceID)
+
+	facts, ok := NewBonusRacialCharacterLanguageFacts(
+		selectedRace,
+		[]CharacterAbilityScore{mustNewCharacterAbilityScoreForLanguageTest(t, ability.IntelligenceScore, 14)},
+		[]characterlanguage.LanguageID{
+			characterlanguage.CelestialLanguageID,
+			characterlanguage.DraconicLanguageID,
+		},
+	)
+	if !ok {
+		t.Fatal("expected fixed-list bonus language facts to compose")
+	}
+
+	assertCharacterLanguageIDs(
+		t,
+		facts.GetLanguageIDs(),
+		[]characterlanguage.LanguageID{
+			characterlanguage.CelestialLanguageID,
+			characterlanguage.DraconicLanguageID,
+		},
+	)
+
+	if facts.HasLanguage(characterlanguage.CommonLanguageID) || facts.HasLanguage(characterlanguage.ElvenLanguageID) {
+		t.Fatal("expected bonus language facts not to include automatic languages")
+	}
+}
+
+func TestNewBonusRacialCharacterLanguageFacts_ComposesAnyNonSecretRaceFromIntelligence(t *testing.T) {
+	testCases := []struct {
+		name       string
+		raceID     characterrace.RaceID
+		languageID characterlanguage.LanguageID
+	}{
+		{"human", characterrace.HumanRaceID, characterlanguage.InfernalLanguageID},
+		{"half-elf", characterrace.HalfElfRaceID, characterlanguage.AquanLanguageID},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			selectedRace := mustNewCharacterRaceForLanguageTest(t, tc.raceID)
+
+			facts, ok := NewBonusRacialCharacterLanguageFacts(
+				selectedRace,
+				[]CharacterAbilityScore{mustNewCharacterAbilityScoreForLanguageTest(t, ability.IntelligenceScore, 12)},
+				[]characterlanguage.LanguageID{tc.languageID},
+			)
+			if !ok {
+				t.Fatal("expected any-non-secret bonus language facts to compose")
+			}
+
+			assertCharacterLanguageIDs(
+				t,
+				facts.GetLanguageIDs(),
+				[]characterlanguage.LanguageID{tc.languageID},
+			)
+		})
+	}
+}
+
+func TestNewBonusRacialCharacterLanguageFacts_AllowsNoChoicesWhenIntelligenceDoesNotGrantBonus(t *testing.T) {
+	selectedRace := mustNewCharacterRaceForLanguageTest(t, characterrace.DwarfRaceID)
+
+	facts, ok := NewBonusRacialCharacterLanguageFacts(
+		selectedRace,
+		[]CharacterAbilityScore{mustNewCharacterAbilityScoreForLanguageTest(t, ability.IntelligenceScore, 9)},
+		nil,
+	)
+	if !ok {
+		t.Fatal("expected zero bonus language facts to compose when Intelligence grants none")
+	}
+
+	if len(facts.GetLanguageIDs()) != 0 {
+		t.Fatalf("expected no bonus languages, got %v", facts.GetLanguageIDs())
+	}
+}
+
+func TestNewBonusRacialCharacterLanguageFacts_RejectsMissingDuplicateUnknownOverBudgetOrDisallowedChoices(t *testing.T) {
+	var zeroRace CharacterRace
+
+	humanRace := mustNewCharacterRaceForLanguageTest(t, characterrace.HumanRaceID)
+	dwarfRace := mustNewCharacterRaceForLanguageTest(t, characterrace.DwarfRaceID)
+	unknownRace := CharacterRace{id: characterrace.RaceID("android")}
+	intelligence12 := []CharacterAbilityScore{mustNewCharacterAbilityScoreForLanguageTest(t, ability.IntelligenceScore, 12)}
+	intelligence14 := []CharacterAbilityScore{mustNewCharacterAbilityScoreForLanguageTest(t, ability.IntelligenceScore, 14)}
+
+	testCases := []struct {
+		name      string
+		race      CharacterRace
+		scores    []CharacterAbilityScore
+		languages []characterlanguage.LanguageID
+	}{
+		{"zero race", zeroRace, intelligence12, []characterlanguage.LanguageID{characterlanguage.InfernalLanguageID}},
+		{"unknown race", unknownRace, intelligence12, []characterlanguage.LanguageID{characterlanguage.InfernalLanguageID}},
+		{"missing intelligence", humanRace, nil, []characterlanguage.LanguageID{characterlanguage.InfernalLanguageID}},
+		{"missing choice", humanRace, intelligence12, nil},
+		{"duplicate choices", humanRace, intelligence14, []characterlanguage.LanguageID{characterlanguage.InfernalLanguageID, characterlanguage.InfernalLanguageID}},
+		{"unknown choice", humanRace, intelligence12, []characterlanguage.LanguageID{characterlanguage.LanguageID("Thieves' Cant")}},
+		{"over budget", humanRace, intelligence12, []characterlanguage.LanguageID{characterlanguage.InfernalLanguageID, characterlanguage.AquanLanguageID}},
+		{"disallowed fixed-list choice", dwarfRace, intelligence12, []characterlanguage.LanguageID{characterlanguage.CelestialLanguageID}},
+		{"secret any-non-secret choice", humanRace, intelligence12, []characterlanguage.LanguageID{characterlanguage.DruidicLanguageID}},
+		{"automatic language duplicate", humanRace, intelligence12, []characterlanguage.LanguageID{characterlanguage.CommonLanguageID}},
+		{"no budget with choice", dwarfRace, []CharacterAbilityScore{mustNewCharacterAbilityScoreForLanguageTest(t, ability.IntelligenceScore, 8)}, []characterlanguage.LanguageID{characterlanguage.GiantLanguageID}},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			if _, ok := NewBonusRacialCharacterLanguageFacts(tc.race, tc.scores, tc.languages); ok {
+				t.Fatal("expected bonus language facts to fail")
+			}
+		})
+	}
+}
+
+func TestNewBonusRacialCharacterLanguageFacts_RejectsMalformedAbilityScores(t *testing.T) {
+	selectedRace := mustNewCharacterRaceForLanguageTest(t, characterrace.HumanRaceID)
+
+	if _, ok := NewBonusRacialCharacterLanguageFacts(
+		selectedRace,
+		[]CharacterAbilityScore{{id: ability.IntelligenceScore, score: -1}},
+		[]characterlanguage.LanguageID{characterlanguage.InfernalLanguageID},
+	); ok {
+		t.Fatal("expected malformed Intelligence score to fail")
+	}
+
+	intelligence := mustNewCharacterAbilityScoreForLanguageTest(t, ability.IntelligenceScore, 12)
+	if _, ok := NewBonusRacialCharacterLanguageFacts(
+		selectedRace,
+		[]CharacterAbilityScore{intelligence, intelligence},
+		[]characterlanguage.LanguageID{characterlanguage.InfernalLanguageID},
+	); ok {
+		t.Fatal("expected duplicate Intelligence scores to fail")
+	}
+}
+
 func assertCharacterLanguageIDs(
 	t *testing.T,
 	actual []characterlanguage.LanguageID,
@@ -143,6 +280,21 @@ func mustNewCharacterRaceForLanguageTest(t *testing.T, id characterrace.RaceID) 
 	}
 
 	return selectedRace
+}
+
+func mustNewCharacterAbilityScoreForLanguageTest(
+	t *testing.T,
+	id ability.AbilityScoreID,
+	score int,
+) CharacterAbilityScore {
+	t.Helper()
+
+	abilityScore, ok := NewCharacterAbilityScore(id, score)
+	if !ok {
+		t.Fatalf("expected ability score %q %d to compose", id, score)
+	}
+
+	return abilityScore
 }
 
 func mustNewCharacterLanguageForLanguageTest(
