@@ -726,7 +726,7 @@ Do not expand this path into:
 - non-core skills or traits
 - a full mutable character aggregate
 
-- [ ] Create character skill rank allocation facts (domain/chassis):
+- [X] Create character skill rank allocation facts (domain/chassis):
   - selected concrete skill identity
   - allocated ranks
   - validation for core skill and grouped skill identities
