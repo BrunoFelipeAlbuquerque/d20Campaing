@@ -1,21 +1,23 @@
 package race
 
+import characterlanguage "d20campaigngenerator/internal/domain/rpg/character/language"
+
 const (
-	CommonLanguageID      LanguageID = "Common"
-	AbyssalLanguageID     LanguageID = "Abyssal"
-	CelestialLanguageID   LanguageID = "Celestial"
-	DraconicLanguageID    LanguageID = "Draconic"
-	DwarvenLanguageID     LanguageID = "Dwarven"
-	ElvenLanguageID       LanguageID = "Elven"
-	GiantLanguageID       LanguageID = "Giant"
-	GnomeLanguageID       LanguageID = "Gnome"
-	GnollLanguageID       LanguageID = "Gnoll"
-	GoblinLanguageID      LanguageID = "Goblin"
-	TerranLanguageID      LanguageID = "Terran"
-	UndercommonLanguageID LanguageID = "Undercommon"
-	SylvanLanguageID      LanguageID = "Sylvan"
-	OrcLanguageID         LanguageID = "Orc"
-	HalflingLanguageID    LanguageID = "Halfling"
+	CommonLanguageID      LanguageID = characterlanguage.CommonLanguageID
+	AbyssalLanguageID     LanguageID = characterlanguage.AbyssalLanguageID
+	CelestialLanguageID   LanguageID = characterlanguage.CelestialLanguageID
+	DraconicLanguageID    LanguageID = characterlanguage.DraconicLanguageID
+	DwarvenLanguageID     LanguageID = characterlanguage.DwarvenLanguageID
+	ElvenLanguageID       LanguageID = characterlanguage.ElvenLanguageID
+	GiantLanguageID       LanguageID = characterlanguage.GiantLanguageID
+	GnomeLanguageID       LanguageID = characterlanguage.GnomeLanguageID
+	GnollLanguageID       LanguageID = characterlanguage.GnollLanguageID
+	GoblinLanguageID      LanguageID = characterlanguage.GoblinLanguageID
+	TerranLanguageID      LanguageID = characterlanguage.TerranLanguageID
+	UndercommonLanguageID LanguageID = characterlanguage.UndercommonLanguageID
+	SylvanLanguageID      LanguageID = characterlanguage.SylvanLanguageID
+	OrcLanguageID         LanguageID = characterlanguage.OrcLanguageID
+	HalflingLanguageID    LanguageID = characterlanguage.HalflingLanguageID
 )
 
 const (
@@ -48,24 +50,6 @@ const (
 	BonusFeatFeatureID          RacialFeatureID = "Bonus Feat"
 	SkilledFeatureID            RacialFeatureID = "Skilled"
 )
-
-var validLanguageIDs = map[LanguageID]struct{}{
-	CommonLanguageID:      {},
-	AbyssalLanguageID:     {},
-	CelestialLanguageID:   {},
-	DraconicLanguageID:    {},
-	DwarvenLanguageID:     {},
-	ElvenLanguageID:       {},
-	GiantLanguageID:       {},
-	GnomeLanguageID:       {},
-	GnollLanguageID:       {},
-	GoblinLanguageID:      {},
-	TerranLanguageID:      {},
-	UndercommonLanguageID: {},
-	SylvanLanguageID:      {},
-	OrcLanguageID:         {},
-	HalflingLanguageID:    {},
-}
 
 var validRacialFeatureIDs = map[RacialFeatureID]struct{}{
 	SlowAndSteadyFeatureID:      {},

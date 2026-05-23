@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	ability "d20campaigngenerator/internal/domain/rpg/character/ability"
+	characterlanguage "d20campaigngenerator/internal/domain/rpg/character/language"
 )
 
 func TestNewRace_ConstructsValidatedRaceChassis(t *testing.T) {
@@ -97,6 +98,32 @@ func TestNewRace_StoresSelectableAbilityScoreModifierMetadata(t *testing.T) {
 
 	if selectableModifier != 2 {
 		t.Fatalf("expected selectable ability score modifier 2, got %d", selectableModifier)
+	}
+}
+
+func TestBonusLanguageChoice_AllowsFixedOrAnyNonSecretLanguages(t *testing.T) {
+	fixedChoice := mustBonusLanguageChoiceForTest(t, []LanguageID{ElvenLanguageID}, false)
+
+	if !fixedChoice.AllowsLanguageID(ElvenLanguageID) {
+		t.Fatal("expected fixed-list bonus language choice to allow listed language")
+	}
+
+	if fixedChoice.AllowsLanguageID(characterlanguage.InfernalLanguageID) {
+		t.Fatal("expected fixed-list bonus language choice to reject unlisted language")
+	}
+
+	anyNonSecretChoice := mustBonusLanguageChoiceForTest(t, nil, true)
+
+	if !anyNonSecretChoice.AllowsLanguageID(characterlanguage.InfernalLanguageID) {
+		t.Fatal("expected any-non-secret bonus language choice to allow known non-secret language")
+	}
+
+	if anyNonSecretChoice.AllowsLanguageID(characterlanguage.DruidicLanguageID) {
+		t.Fatal("expected any-non-secret bonus language choice to reject secret language")
+	}
+
+	if anyNonSecretChoice.AllowsLanguageID(LanguageID("Thieves' Cant")) {
+		t.Fatal("expected any-non-secret bonus language choice to reject unknown language")
 	}
 }
 

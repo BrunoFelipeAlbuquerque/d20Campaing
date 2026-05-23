@@ -126,7 +126,7 @@
 
 ## SHOULD
 
-- [ ] Define the core language identity boundary before P7 bonus-language selection hardens around race-owned IDs:
+- [X] Define the core language identity boundary before P7 bonus-language selection hardens around race-owned IDs:
   - independent audit before P7 found `BACKLOG.md`, `README.md`, and `docs/project-map.md` correctly point to P7 core character languages as the next path
   - `race.LanguageID` and `validLanguageIDs` currently live inside `internal/domain/rpg/character/race`
   - the current valid language set only covers languages needed by the seeded fixed core race lists: Common, Abyssal, Celestial, Draconic, Dwarven, Elven, Giant, Gnome, Gnoll, Goblin, Terran, Undercommon, Sylvan, Orc, and Halfling
@@ -134,7 +134,9 @@
   - local PF1 race text says humans and half-elves with high Intelligence can choose any language except secret languages such as Druidic
   - `race.BonusLanguageChoice` represents human and half-elf eligibility only as `AllowsAnyNonSecret()`, with no catalog or secret-language flag for `character` to validate concrete choices against
   - the first P7 automatic-language item is still safe, but the second P7 bonus-language item will otherwise either reject valid non-secret choices, accept arbitrary strings, or add side tables at the `character` boundary
-  - before implementing bonus-language selection, define the smallest core language identity/catalog or validation surface needed to distinguish known non-secret languages from secret languages without adding campaign or non-core language behavior
+  - added `internal/domain/rpg/character/language` as the core common language identity/query boundary with Druidic marked secret
+  - `race.LanguageID` now aliases the language boundary and race language validation delegates to it
+  - `BonusLanguageChoice.AllowsLanguageID` now lets later character composition validate fixed-list and any-non-secret choices without side tables or arbitrary strings
 
 - [X] Refresh source-of-truth docs after P4 completion and new P5 audit path:
   - independent audit found `BACKLOG.md` now marks every P4 core feat selection context item complete
