@@ -696,7 +696,7 @@ Do not expand this path into:
   - reject missing, duplicate, unknown, over-budget, or disallowed choices
   - no secret languages, campaign-specific languages, or non-core content
 
-- [ ] Refresh minimum level-1 character creation slice for languages (resolution/query logic):
+- [X] Refresh minimum level-1 character creation slice for languages (resolution/query logic):
   - keep the slice test-only and adapter-focused
   - include one fixed-list bonus-language race
   - include one any-non-secret bonus-language race

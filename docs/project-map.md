@@ -17,8 +17,8 @@ Order of work:
 3. resolution/query logic
 4. character composition
 
-As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, and P7 automatic and bonus racial language facts are present. Check `BACKLOG.md` for exact unchecked work.
-The next planned area is the minimum level-1 language creation slice; later non-core work is intentionally deferred.
+As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, and P7 core character language composition with slice coverage are present. Check `BACKLOG.md` for exact unchecked work.
+The next planned area is P8 core skill rank allocation; later non-core work is intentionally deferred.
 
 ---
 
@@ -86,20 +86,21 @@ Keep composition thin. If logic belongs to a lower domain, add it there only whe
 
 ## Next Backlog Path
 
-The next core-only backlog path is P7 core character languages.
+The next core-only backlog path is P8 core skill rank allocation.
 
-The P6 core class-level totals and base derived facts path is complete, and automatic and bonus racial language facts are present. Continue by refreshing the minimum level-1 character creation slice for languages at the `character` boundary.
+The P7 core character language path is complete. Continue by creating character skill rank allocation facts at the `character` boundary.
 
 Check `BACKLOG.md` before starting any far-future non-core item.
 
-The path should prove language composition inside the minimum creation slice before adding skill-rank allocation, combat-facing snapshots, spell preparation, or broader character aggregation.
+The path should prove rank allocation facts, budget composition, level-cap validation, and feat prerequisite feeding before adding final skill check totals or armor penalties.
 
 Out of scope for this path:
 
-- literacy, secret languages beyond current core metadata, or campaign languages
-- language-dependent spell effects
-- skill checks, social interaction, or exploration behavior
-- non-core races or languages
+- final skill check totals
+- armor check penalties
+- aid another, taking 10/20, or skill-use DCs
+- retraining or favored class bonuses
+- non-core skills or traits
 - full mutable character aggregate
 - broad folder or package reorganization
 

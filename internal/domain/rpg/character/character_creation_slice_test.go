@@ -7,6 +7,7 @@ import (
 	characterclass "d20campaigngenerator/internal/domain/rpg/character/class"
 	characterequipment "d20campaigngenerator/internal/domain/rpg/character/equipment"
 	characterfeat "d20campaigngenerator/internal/domain/rpg/character/feat"
+	characterlanguage "d20campaigngenerator/internal/domain/rpg/character/language"
 	characterrace "d20campaigngenerator/internal/domain/rpg/character/race"
 	characterspell "d20campaigngenerator/internal/domain/rpg/character/spell"
 )
@@ -313,6 +314,108 @@ func TestMinimumLevelOneCharacterCreationSlice_RacialAbilitySelectionsFailClosed
 		},
 	); ok {
 		t.Fatal("expected selected ability input to fail against a fixed-modifier race")
+	}
+}
+
+func TestMinimumLevelOneCharacterCreationSlice_ComposesLanguageContexts(t *testing.T) {
+	elfRace := mustNewCharacterRaceForSliceTest(t, characterrace.ElfRaceID)
+	elfAutomaticLanguages, ok := NewAutomaticRacialCharacterLanguageFacts(elfRace)
+	if !ok {
+		t.Fatal("expected elf automatic racial language facts to compose")
+	}
+
+	assertCharacterLanguageIDs(
+		t,
+		elfAutomaticLanguages.GetLanguageIDs(),
+		[]characterlanguage.LanguageID{
+			characterlanguage.CommonLanguageID,
+			characterlanguage.ElvenLanguageID,
+		},
+	)
+
+	elfBonusLanguages, ok := NewBonusRacialCharacterLanguageFacts(
+		elfRace,
+		[]CharacterAbilityScore{mustNewCharacterAbilityScoreForAbilityTest(t, ability.IntelligenceScore, 14)},
+		[]characterlanguage.LanguageID{
+			characterlanguage.CelestialLanguageID,
+			characterlanguage.DraconicLanguageID,
+		},
+	)
+	if !ok {
+		t.Fatal("expected elf fixed-list bonus language facts to compose")
+	}
+
+	assertCharacterLanguageIDs(
+		t,
+		elfBonusLanguages.GetLanguageIDs(),
+		[]characterlanguage.LanguageID{
+			characterlanguage.CelestialLanguageID,
+			characterlanguage.DraconicLanguageID,
+		},
+	)
+
+	if elfAutomaticLanguages.HasLanguage(characterlanguage.CelestialLanguageID) {
+		t.Fatal("expected automatic language facts not to include selected bonus languages")
+	}
+
+	humanRace := mustNewCharacterRaceForSliceTest(t, characterrace.HumanRaceID)
+	humanAutomaticLanguages, ok := NewAutomaticRacialCharacterLanguageFacts(humanRace)
+	if !ok {
+		t.Fatal("expected human automatic racial language facts to compose")
+	}
+
+	assertCharacterLanguageIDs(
+		t,
+		humanAutomaticLanguages.GetLanguageIDs(),
+		[]characterlanguage.LanguageID{characterlanguage.CommonLanguageID},
+	)
+
+	humanBonusLanguages, ok := NewBonusRacialCharacterLanguageFacts(
+		humanRace,
+		[]CharacterAbilityScore{mustNewCharacterAbilityScoreForAbilityTest(t, ability.IntelligenceScore, 12)},
+		[]characterlanguage.LanguageID{characterlanguage.InfernalLanguageID},
+	)
+	if !ok {
+		t.Fatal("expected human any-non-secret bonus language facts to compose")
+	}
+
+	assertCharacterLanguageIDs(
+		t,
+		humanBonusLanguages.GetLanguageIDs(),
+		[]characterlanguage.LanguageID{characterlanguage.InfernalLanguageID},
+	)
+}
+
+func TestMinimumLevelOneCharacterCreationSlice_LanguageSelectionsFailClosed(t *testing.T) {
+	humanRace := mustNewCharacterRaceForSliceTest(t, characterrace.HumanRaceID)
+	dwarfRace := mustNewCharacterRaceForSliceTest(t, characterrace.DwarfRaceID)
+	intelligence12 := []CharacterAbilityScore{mustNewCharacterAbilityScoreForAbilityTest(t, ability.IntelligenceScore, 12)}
+
+	if _, ok := NewBonusRacialCharacterLanguageFacts(
+		humanRace,
+		intelligence12,
+		[]characterlanguage.LanguageID{
+			characterlanguage.InfernalLanguageID,
+			characterlanguage.AquanLanguageID,
+		},
+	); ok {
+		t.Fatal("expected over-budget bonus language selection to fail")
+	}
+
+	if _, ok := NewBonusRacialCharacterLanguageFacts(
+		dwarfRace,
+		intelligence12,
+		[]characterlanguage.LanguageID{characterlanguage.CelestialLanguageID},
+	); ok {
+		t.Fatal("expected disallowed fixed-list language selection to fail")
+	}
+
+	if _, ok := NewBonusRacialCharacterLanguageFacts(
+		humanRace,
+		intelligence12,
+		[]characterlanguage.LanguageID{characterlanguage.DruidicLanguageID},
+	); ok {
+		t.Fatal("expected secret language selection to fail")
 	}
 }
 
