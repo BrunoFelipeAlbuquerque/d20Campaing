@@ -203,17 +203,17 @@ Those differences exist in the repository, but they are not the source of truth 
 
 ## Current Status Matrix
 
-This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 core character language path, the first P8 skill-rank allocation fact and budget slices, and the current P8 rank validation gap.
+This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 core character language path, and the P8 skill-rank allocation fact, budget, and rank validation slices.
 
 | Area | Exists | Core-correct now | Intentional limit | Project-specific note |
 | --- | --- | --- | --- | --- |
 | `ability` | yes | carrying capacity, hit point averages, explicit HP base dice, core construct HP table, and core size ladder behavior are aligned for the current surface | not a full combat-state engine | `Titanic`, dual imperial/metric size measurements, source-based caster levels |
 | `creaturetype` | yes | supported base types and the currently supported subtype effects resolve structurally | partial subtype coverage and partial trait model by design | none beyond project-specific sizes if a caller uses them |
-| `character` | yes | composition helpers for race, class, HP, spellcasting progression, spell-list entries, feat prerequisites, selected carryable equipment, carried weight, racial ability composition, character level facts, base attack bonus facts, base saving throw facts, class HP ledger facts, automatic and bonus racial language facts, skill rank allocation and budget facts, refreshed class-level derived creation slice, and refreshed language creation slice | not a full character aggregate yet | none |
+| `character` | yes | composition helpers for race, class, HP, spellcasting progression, spell-list entries, feat prerequisites, selected carryable equipment, carried weight, racial ability composition, character level facts, base attack bonus facts, base saving throw facts, class HP ledger facts, automatic and bonus racial language facts, skill rank allocation, budget, and validation facts, refreshed class-level derived creation slice, and refreshed language creation slice | not a full character aggregate yet | none |
 | `language` | yes | core common language identities are seeded with secret-language metadata | identity/query surface only; character language selection composes in `character` | none |
 | `race` | yes | 7 core races seeded with lookup helpers and automatic/bonus language metadata | core seed/query slice only | none |
 | `modifier` | yes | validated modifier chassis, stacking resolution, and usable target/condition refs | not full downstream composition yet | none |
-| `skill` | yes | core catalog seeded with public lookup and grouped specializations accepted by the domain | not skill-rank composition yet | none |
+| `skill` | yes | core catalog seeded with public lookup and grouped specializations accepted by the domain | identity/query surface only; rank allocation composes in `character` | none |
 | `class` | yes | 11 core classes seeded with validated chassis, lookup helper, and spellcasting metadata | class feature details and character composition are not modeled yet | none |
 | `spellcasting progression` | yes | core progression tables seeded for bard, cleric, druid, paladin, ranger, sorcerer, and wizard | table/query surface only; no character spell-slot composition yet | none |
 | `spell` | yes | spell chassis, spell-list entries, core spell-list bindings, and core spell data are seeded with read-only query helpers | no spell preparation, casting, or character spellbook composition yet | none |
@@ -399,7 +399,7 @@ That work will likely interact with:
 - human Skilled racial metadata
 - feat prerequisite skill-rank inputs
 
-The next executable backlog item is validating selected skill ranks against budget and level cap. Keep it resolution-focused: enforce total allocated ranks, enforce character-level rank cap, support concrete grouped skills, and avoid final skill totals or armor penalties.
+The next executable backlog item is feeding allocated skill ranks into feat prerequisite state. Keep it resolution-focused: convert validated rank allocations into existing `CharacterSkillRanks` facts, demonstrate seeded feat prerequisites, and avoid feat allocation or final skill totals.
 
 ## Philosophy In One Sentence
 

@@ -739,7 +739,7 @@ Do not expand this path into:
   - reject invalid class levels, invalid Intelligence facts, or negative budgets
   - no favored class bonuses, traits, or retroactive rebuild behavior
 
-- [ ] Validate selected skill ranks against budget and level cap (resolution/query logic):
+- [X] Validate selected skill ranks against budget and level cap (resolution/query logic):
   - enforce total allocated ranks not exceeding budget
   - enforce rank cap from character level
   - reject duplicate, malformed, unknown, or over-cap skill allocations
