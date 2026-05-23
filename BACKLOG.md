@@ -732,7 +732,7 @@ Do not expand this path into:
   - validation for core skill and grouped skill identities
   - no final skill totals, armor penalties, or skill-use rules
 
-- [ ] Compose skill-rank budget from class levels and Intelligence (resolution/query logic):
+- [X] Compose skill-rank budget from class levels and Intelligence (resolution/query logic):
   - use seeded core class skill ranks per level
   - use composed Intelligence modifier
   - support currently modeled core racial rank metadata such as human `Skilled`
