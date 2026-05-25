@@ -95,7 +95,7 @@ The P8 core skill rank allocation path is complete. Continue by adding core skil
 
 Check `BACKLOG.md` before starting any far-future non-core item.
 
-The path should prove skill ability keys, static rank-and-ability totals, class-skill bonuses, trained-only availability, and armor check penalty application without adding skill-use DCs or roll behavior.
+The path should prove skill ability keys, static rank-and-ability totals, class-skill bonuses, and trained-only availability without adding skill-use DCs or roll behavior. Armor check penalty application is deferred until equipped armor and shield facts exist.
 
 Out of scope for this path:
 

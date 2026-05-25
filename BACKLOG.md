@@ -756,7 +756,7 @@ Do not expand this path into:
 
 ## P9 — Core skill check totals
 
-### Ability keys, class skill bonus, and armor penalties
+### Ability keys, class skill bonus, and trained-only availability
 
 Near-term goal: compute supported static skill check totals from allocated ranks and existing character facts.
 
@@ -764,7 +764,7 @@ The path should answer:
 
 - can each core skill expose the ability score used for its check?
 - can trained-only, class-skill, and rank metadata produce static skill totals?
-- can armor check penalty apply only to applicable skills from equipped armor or shields?
+- can the skill-total surface stay ready for armor check penalties without inventing equipped-item side inputs?
 
 Do not expand this path into:
 
@@ -785,12 +785,6 @@ Do not expand this path into:
   - enforce trained-only availability
   - reject missing ability facts, invalid ranks, or unknown skills
   - no armor penalties, situational modifiers, or roll behavior
-
-- [ ] Compose armor check penalty into applicable skill totals (resolution/query logic):
-  - use equipped armor and shield metadata once equipped inventory exists
-  - apply penalties only to skills marked for armor check penalty
-  - reject malformed equipped armor or shield facts
-  - no combat actions, speed changes, or magic equipment
 
 ---
 
@@ -844,13 +838,13 @@ Do not expand this path into:
 
 ### Equipped armor, shields, and wielded weapons
 
-Near-term goal: distinguish carried items from equipped items before AC, speed, attack, or damage calculations.
+Near-term goal: distinguish carried items from equipped items before AC, speed, skill-penalty, attack, or damage calculations.
 
 The path should answer:
 
 - can carried armor, shields, and weapons be equipped through validated character facts?
 - can equipment slots prevent duplicate or impossible equipment states?
-- can equipped facts expose the metadata needed by later defensive and attack snapshots?
+- can equipped facts expose the metadata needed by later defensive, skill-penalty, and attack snapshots?
 
 Do not expand this path into:
 
@@ -879,6 +873,12 @@ Do not expand this path into:
   - reject equipping items not carried or carried in non-positive quantity
   - expose equipped armor, shield, and weapon facts for downstream snapshots
   - no combat behavior or magic item body slots
+
+- [ ] Compose armor check penalty into applicable skill totals (resolution/query logic):
+  - use validated equipped armor and shield facts from this path
+  - apply penalties only to skills marked for armor check penalty
+  - reject malformed equipped armor or shield facts
+  - no AC totals, speed changes, combat actions, or magic equipment
 
 ---
 

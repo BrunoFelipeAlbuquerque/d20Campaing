@@ -397,7 +397,7 @@ That work will likely interact with:
 - ability score facts
 - core skill identities, including grouped skills
 - class skill metadata
-- armor check penalty metadata
+- armor check penalty metadata later, after equipped armor and shield facts exist
 
 The next executable backlog item is adding core skill ability-key metadata. Keep it domain-focused: expose each seeded skill ability key, share grouped family keys, and avoid rank allocation or check totals in the `skill` domain.
 
