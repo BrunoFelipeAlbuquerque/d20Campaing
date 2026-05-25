@@ -126,6 +126,14 @@
 
 ## SHOULD
 
+- [ ] Resolve the P9 armor-check penalty dependency before composing skill check penalties:
+  - independent audit on 2026-05-25 found a backlog ordering risk, not a current test failure
+  - `BACKLOG.md` P9 asks to compose armor check penalty into skill totals using equipped armor and shield metadata
+  - equipped armor and shield facts are not scheduled until P11 under `Core equipped inventory`
+  - current `character` code models selected carryable equipment and carried weight, but not equipped armor or equipped shield facts
+  - implementing the P9 armor-penalty item before equipped facts exist would require caller-provided side inputs, pull P11 work forward silently, or create a temporary modeling path
+  - continue with the earlier P9 items, but before the armor-penalty item either introduce the equipped armor/shield facts explicitly or reshape the backlog dependency
+
 - [X] Define the core language identity boundary before P7 bonus-language selection hardens around race-owned IDs:
   - independent audit before P7 found `BACKLOG.md`, `README.md`, and `docs/project-map.md` correctly point to P7 core character languages as the next path
   - `race.LanguageID` and `validLanguageIDs` currently live inside `internal/domain/rpg/character/race`
