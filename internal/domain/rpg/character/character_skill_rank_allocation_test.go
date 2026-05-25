@@ -3,6 +3,7 @@ package character
 import (
 	"testing"
 
+	ability "d20campaigngenerator/internal/domain/rpg/character/ability"
 	"d20campaigngenerator/internal/domain/rpg/character/skill"
 )
 
@@ -33,6 +34,10 @@ func TestNewCharacterSkillRankAllocation_ComposesCoreSkillFact(t *testing.T) {
 		t.Fatal("expected Ride allocation not to be grouped")
 	}
 
+	if selectedSkill.GetAbilityScoreID() != ability.DexterityScore {
+		t.Fatalf("expected Ride ability score %q, got %q", ability.DexterityScore, selectedSkill.GetAbilityScoreID())
+	}
+
 	if !selectedSkill.AppliesArmorCheckPenalty() {
 		t.Fatal("expected Ride metadata to preserve armor check penalty flag")
 	}
@@ -44,13 +49,14 @@ func TestNewCharacterSkillRankAllocation_ComposesGroupedSpecializedSkillFacts(t 
 		skillID        skill.SkillID
 		familyID       skill.SkillID
 		specialization string
+		abilityScoreID ability.AbilityScoreID
 		trainedOnly    bool
 		expectedRanks  int
 	}{
-		{"craft", skill.SkillID("Craft (alchemy)"), skill.CraftSkillID, "alchemy", false, 1},
-		{"knowledge", skill.SkillID("Knowledge (arcana)"), skill.KnowledgeSkillID, "arcana", true, 2},
-		{"perform", skill.SkillID("Perform (sing)"), skill.PerformSkillID, "sing", false, 3},
-		{"profession", skill.SkillID("Profession (sailor)"), skill.ProfessionSkillID, "sailor", true, 4},
+		{"craft", skill.SkillID("Craft (alchemy)"), skill.CraftSkillID, "alchemy", ability.IntelligenceScore, false, 1},
+		{"knowledge", skill.SkillID("Knowledge (arcana)"), skill.KnowledgeSkillID, "arcana", ability.IntelligenceScore, true, 2},
+		{"perform", skill.SkillID("Perform (sing)"), skill.PerformSkillID, "sing", ability.CharismaScore, false, 3},
+		{"profession", skill.SkillID("Profession (sailor)"), skill.ProfessionSkillID, "sailor", ability.WisdomScore, true, 4},
 	}
 
 	for _, tc := range testCases {
@@ -84,6 +90,10 @@ func TestNewCharacterSkillRankAllocation_ComposesGroupedSpecializedSkillFacts(t 
 
 			if !selectedSkill.IsGrouped() {
 				t.Fatal("expected specialized skill to stay grouped")
+			}
+
+			if selectedSkill.GetAbilityScoreID() != tc.abilityScoreID {
+				t.Fatalf("expected ability score %q, got %q", tc.abilityScoreID, selectedSkill.GetAbilityScoreID())
 			}
 
 			if selectedSkill.IsTrainedOnly() != tc.trainedOnly {

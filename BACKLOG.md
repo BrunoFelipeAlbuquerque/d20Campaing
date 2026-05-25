@@ -773,7 +773,7 @@ Do not expand this path into:
 - movement or combat action resolution
 - non-core skills or traits
 
-- [ ] Add core skill ability-key metadata (domain/chassis):
+- [X] Add core skill ability-key metadata (domain/chassis):
   - each seeded core skill exposes its ability score key
   - grouped skills share the correct family ability key
   - validation rejects unknown ability keys

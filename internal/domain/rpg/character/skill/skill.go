@@ -1,6 +1,10 @@
 package skill
 
-import "strings"
+import (
+	"strings"
+
+	ability "d20campaigngenerator/internal/domain/rpg/character/ability"
+)
 
 type skillID string
 type SkillID = skillID
@@ -38,15 +42,27 @@ type skill struct {
 	id                       skillID
 	familyID                 skillID
 	specialization           string
+	abilityScoreID           ability.AbilityScoreID
 	trainedOnly              bool
 	armorCheckPenaltyApplies bool
 	grouped                  bool
 }
 type Skill = skill
 
-func NewSkill(id SkillID, trainedOnly bool, armorCheckPenaltyApplies bool, grouped bool) (Skill, bool) {
+func NewSkill(
+	id SkillID,
+	abilityScoreID ability.AbilityScoreID,
+	trainedOnly bool,
+	armorCheckPenaltyApplies bool,
+	grouped bool,
+) (Skill, bool) {
 	familyID, specialization, ok := parseSkillID(id)
 	if !ok || grouped != isGroupedSkillID(familyID) {
+		return skill{}, false
+	}
+
+	expectedAbilityScoreID, ok := coreSkillAbilityScoreID(familyID)
+	if !ok || abilityScoreID != expectedAbilityScoreID {
 		return skill{}, false
 	}
 
@@ -54,6 +70,7 @@ func NewSkill(id SkillID, trainedOnly bool, armorCheckPenaltyApplies bool, group
 		id:                       id,
 		familyID:                 familyID,
 		specialization:           specialization,
+		abilityScoreID:           abilityScoreID,
 		trainedOnly:              trainedOnly,
 		armorCheckPenaltyApplies: armorCheckPenaltyApplies,
 		grouped:                  grouped,
@@ -128,6 +145,10 @@ func (s skill) GetSpecialization() (string, bool) {
 	return s.specialization, true
 }
 
+func (s skill) GetAbilityScoreID() ability.AbilityScoreID {
+	return s.abilityScoreID
+}
+
 func (s skill) IsTrainedOnly() bool {
 	return s.trainedOnly
 }
@@ -143,6 +164,10 @@ func (s skill) IsGrouped() bool {
 func isValidSkillID(id SkillID) bool {
 	_, _, ok := parseSkillID(id)
 	return ok
+}
+
+func IsValidSkillID(id SkillID) bool {
+	return isValidSkillID(id)
 }
 
 func isGroupedSkillID(id SkillID) bool {
