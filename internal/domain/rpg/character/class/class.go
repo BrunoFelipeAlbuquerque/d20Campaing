@@ -298,8 +298,7 @@ func isValidClassSkillID(id skill.SkillID) bool {
 		return true
 	}
 
-	_, ok := skill.NewSkill(id, false, false, true)
-	return ok
+	return skill.IsValidSkillID(id)
 }
 
 func dedupeWeaponProficiencies(

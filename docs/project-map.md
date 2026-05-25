@@ -17,8 +17,8 @@ Order of work:
 3. resolution/query logic
 4. character composition
 
-As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, P7 core character language composition with slice coverage, and the P8 core skill rank allocation path are present. Check `BACKLOG.md` for exact unchecked work.
-The next planned area is P9 skill ability-key metadata and static skill check totals; later non-core work is intentionally deferred.
+As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, P7 core character language composition with slice coverage, the P8 core skill rank allocation path, and P9 core skill ability-key metadata are present. Check `BACKLOG.md` for exact unchecked work.
+The next planned area is P9 static skill check totals; later non-core work is intentionally deferred.
 
 ---
 
@@ -49,7 +49,7 @@ Do not bulk-read local rule text, solution notes, or internal role files unless 
 | `internal/domain/rpg/character/creaturetype` | Structural creature rule resolution: type, subtype, traits, contextual flags | Structural only; not a full character engine |
 | `internal/domain/rpg/character/language` | Core common language identities and secret-language flags | Language identity/query only; character language selection composes in `character` |
 | `internal/domain/rpg/character/race` | Core race chassis, core race seeds, race lookup/query helpers | Race facts only; character choices compose elsewhere |
-| `internal/domain/rpg/character/skill` | Core skill chassis, grouped skill parsing, skill catalog lookup | Skill identity only; ranks compose elsewhere |
+| `internal/domain/rpg/character/skill` | Core skill chassis, grouped skill parsing, skill catalog lookup, and skill ability-key metadata | Skill identity and metadata only; ranks and totals compose elsewhere |
 | `internal/domain/rpg/character/class` | Core class chassis, class seeds, spellcasting progression tables, class feature/proficiency IDs | Class metadata only; final character stats compose elsewhere |
 | `internal/domain/rpg/character/spell` | Spell chassis, core spell data, spell-list entries, class spell-list queries | Spell/list metadata only; preparation/casting compose later |
 | `internal/domain/rpg/character/feat` | Feat chassis, typed prerequisites, core feat seeds, feat catalog lookup | Feat facts only; selected character feats compose elsewhere |
@@ -91,7 +91,7 @@ Keep composition thin. If logic belongs to a lower domain, add it there only whe
 
 The next core-only backlog path is P9 core skill check totals.
 
-The P8 core skill rank allocation path is complete. Continue by adding core skill ability-key metadata in the `skill` domain before composing static skill check totals.
+The P8 core skill rank allocation path and P9 skill ability-key metadata are complete. Continue by composing static skill check totals from allocated ranks and ability scores.
 
 Check `BACKLOG.md` before starting any far-future non-core item.
 

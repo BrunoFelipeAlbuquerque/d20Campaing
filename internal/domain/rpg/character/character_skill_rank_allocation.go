@@ -47,7 +47,7 @@ func concreteCharacterSkillForRankAllocation(id skill.SkillID) (skill.Skill, boo
 		return seededSkill, true
 	}
 
-	specializedSkill, ok := skill.NewSkill(id, false, false, true)
+	specializedSkill, ok := skill.NewSpecializedGroupedSkill(id)
 	if !ok {
 		return skill.Skill{}, false
 	}
@@ -56,15 +56,5 @@ func concreteCharacterSkillForRankAllocation(id skill.SkillID) (skill.Skill, boo
 		return skill.Skill{}, false
 	}
 
-	familySkill, ok := skill.GetSkillByID(specializedSkill.GetFamilyID())
-	if !ok || !familySkill.IsGrouped() {
-		return skill.Skill{}, false
-	}
-
-	return skill.NewSkill(
-		id,
-		familySkill.IsTrainedOnly(),
-		familySkill.AppliesArmorCheckPenalty(),
-		true,
-	)
+	return specializedSkill, true
 }

@@ -203,7 +203,7 @@ Those differences exist in the repository, but they are not the source of truth 
 
 ## Current Status Matrix
 
-This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 core character language path, and the completed P8 core skill-rank allocation path.
+This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 core character language path, the completed P8 core skill-rank allocation path, and P9 core skill ability-key metadata.
 
 | Area | Exists | Core-correct now | Intentional limit | Project-specific note |
 | --- | --- | --- | --- | --- |
@@ -213,7 +213,7 @@ This table is the current foundation-audit snapshot for specialist review of the
 | `language` | yes | core common language identities are seeded with secret-language metadata | identity/query surface only; character language selection composes in `character` | none |
 | `race` | yes | 7 core races seeded with lookup helpers and automatic/bonus language metadata | core seed/query slice only | none |
 | `modifier` | yes | validated modifier chassis, stacking resolution, and usable target/condition refs | not full downstream composition yet | none |
-| `skill` | yes | core catalog seeded with public lookup and grouped specializations accepted by the domain | identity/query surface only; rank allocation composes in `character` | none |
+| `skill` | yes | core catalog seeded with public lookup, validated ability-score keys, and grouped specializations accepted with family ability metadata | identity/query surface only; rank allocation and check totals compose in `character` | none |
 | `class` | yes | 11 core classes seeded with validated chassis, lookup helper, and spellcasting metadata | class feature details and character composition are not modeled yet | none |
 | `spellcasting progression` | yes | core progression tables seeded for bard, cleric, druid, paladin, ranger, sorcerer, and wizard | table/query surface only; no character spell-slot composition yet | none |
 | `spell` | yes | spell chassis, spell-list entries, core spell-list bindings, and core spell data are seeded with read-only query helpers | no spell preparation, casting, or character spellbook composition yet | none |
@@ -399,7 +399,7 @@ That work will likely interact with:
 - class skill metadata
 - armor check penalty metadata later, after equipped armor and shield facts exist
 
-The next executable backlog item is adding core skill ability-key metadata. Keep it domain-focused: expose each seeded skill ability key, share grouped family keys, and avoid rank allocation or check totals in the `skill` domain.
+The next executable backlog item is composing static skill check totals from allocated ranks and ability scores. Keep armor penalties, situational modifiers, and roll behavior out until their scheduled backlog items.
 
 ## Philosophy In One Sentence
 
