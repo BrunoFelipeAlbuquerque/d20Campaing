@@ -203,13 +203,13 @@ Those differences exist in the repository, but they are not the source of truth 
 
 ## Current Status Matrix
 
-This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 core character language path, the completed P8 core skill-rank allocation path, and P9 core skill ability-key metadata.
+This table is the current foundation-audit snapshot for specialist review of the existing repo surface. It reflects the delivered core foundation through Feat, the completed P3 carryable equipment catalog path, the completed P4 feat selection context path, the completed P5 core ability composition path, the completed P6 class-level derived-fact path, the completed P7 core character language path, the completed P8 core skill-rank allocation path, and the completed P9 core skill check total path.
 
 | Area | Exists | Core-correct now | Intentional limit | Project-specific note |
 | --- | --- | --- | --- | --- |
 | `ability` | yes | carrying capacity, hit point averages, explicit HP base dice, core construct HP table, and core size ladder behavior are aligned for the current surface | not a full combat-state engine | `Titanic`, dual imperial/metric size measurements, source-based caster levels |
 | `creaturetype` | yes | supported base types and the currently supported subtype effects resolve structurally | partial subtype coverage and partial trait model by design | none beyond project-specific sizes if a caller uses them |
-| `character` | yes | composition helpers for race, class, HP, spellcasting progression, spell-list entries, feat prerequisites, selected carryable equipment, carried weight, racial ability composition, character level facts, base attack bonus facts, base saving throw facts, class HP ledger facts, automatic and bonus racial language facts, skill rank allocation, budget, validation, and prerequisite-feeding facts, refreshed class-level derived creation slice, and refreshed language creation slice | not a full character aggregate yet | none |
+| `character` | yes | composition helpers for race, class, HP, spellcasting progression, spell-list entries, feat prerequisites, selected carryable equipment, carried weight, racial ability composition, character level facts, base attack bonus facts, base saving throw facts, class HP ledger facts, automatic and bonus racial language facts, skill rank allocation, budget, validation, prerequisite-feeding facts, and static skill check total facts, refreshed class-level derived creation slice, and refreshed language creation slice | not a full character aggregate yet | none |
 | `language` | yes | core common language identities are seeded with secret-language metadata | identity/query surface only; character language selection composes in `character` | none |
 | `race` | yes | 7 core races seeded with lookup helpers and automatic/bonus language metadata | core seed/query slice only | none |
 | `modifier` | yes | validated modifier chassis, stacking resolution, and usable target/condition refs | not full downstream composition yet | none |
@@ -389,17 +389,16 @@ Invalid body shapes are rejected.
 
 The next major tracked backlog area is:
 
-- P9 core skill check totals
+- P10 core feat allocation and grants
 
 That work will likely interact with:
 
-- validated skill-rank allocations
-- ability score facts
-- core skill identities, including grouped skills
-- class skill metadata
-- armor check penalty metadata later, after equipped armor and shield facts exist
+- character level facts
+- existing feat prerequisite state
+- selected feat context adapters
+- human and supported class bonus-feat metadata
 
-The next executable backlog item is composing static skill check totals from allocated ranks and ability scores. Keep armor penalties, situational modifiers, and roll behavior out until their scheduled backlog items.
+The next executable backlog item is creating character feat slot and feat grant facts. Keep it domain-focused: define explicit slot and grant facts without adding an allocation engine or feat effects.
 
 ## Philosophy In One Sentence
 

@@ -779,7 +779,7 @@ Do not expand this path into:
   - validation rejects unknown ability keys
   - no rank allocation or check totals in the skill domain
 
-- [ ] Compose static skill check totals from ranks and ability scores (resolution/query logic):
+- [X] Compose static skill check totals from ranks and ability scores (resolution/query logic):
   - use allocated ranks and composed ability facts
   - apply core class-skill bonus when at least one rank is present
   - enforce trained-only availability
