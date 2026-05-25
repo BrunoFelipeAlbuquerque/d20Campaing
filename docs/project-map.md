@@ -17,8 +17,8 @@ Order of work:
 3. resolution/query logic
 4. character composition
 
-As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, P7 core character language composition with slice coverage, the P8 core skill rank allocation path, and P9 core skill ability-key metadata are present. Check `BACKLOG.md` for exact unchecked work.
-The next planned area is P9 static skill check totals; later non-core work is intentionally deferred.
+As of this map, the foundation domains, P4 feat selection composition adapters, P5 core ability composition adapters, P6 class-level derived-fact adapters and slice refresh, P7 core character language composition with slice coverage, the P8 core skill rank allocation path, and the P9 core skill check total path are present. Check `BACKLOG.md` for exact unchecked work.
+The next planned area is P10 core feat allocation and grants; later non-core work is intentionally deferred.
 
 ---
 
@@ -49,7 +49,7 @@ Do not bulk-read local rule text, solution notes, or internal role files unless 
 | `internal/domain/rpg/character/creaturetype` | Structural creature rule resolution: type, subtype, traits, contextual flags | Structural only; not a full character engine |
 | `internal/domain/rpg/character/language` | Core common language identities and secret-language flags | Language identity/query only; character language selection composes in `character` |
 | `internal/domain/rpg/character/race` | Core race chassis, core race seeds, race lookup/query helpers | Race facts only; character choices compose elsewhere |
-| `internal/domain/rpg/character/skill` | Core skill chassis, grouped skill parsing, skill catalog lookup, and skill ability-key metadata | Skill identity and metadata only; ranks and totals compose elsewhere |
+| `internal/domain/rpg/character/skill` | Core skill chassis, grouped skill parsing, skill catalog lookup, and skill ability-key metadata | Skill identity and metadata only; ranks and totals compose in `character` |
 | `internal/domain/rpg/character/class` | Core class chassis, class seeds, spellcasting progression tables, class feature/proficiency IDs | Class metadata only; final character stats compose elsewhere |
 | `internal/domain/rpg/character/spell` | Spell chassis, core spell data, spell-list entries, class spell-list queries | Spell/list metadata only; preparation/casting compose later |
 | `internal/domain/rpg/character/feat` | Feat chassis, typed prerequisites, core feat seeds, feat catalog lookup | Feat facts only; selected character feats compose elsewhere |
@@ -81,6 +81,7 @@ Current character-boundary adapters:
 - `character_skill_rank_allocation.go`: concrete skill rank allocation facts
 - `character_skill_rank_budget.go`: skill-rank budget facts from class levels, Intelligence, and supported racial metadata
 - `character_skill_rank_allocation_facts.go`: selected skill rank validation against budget and character-level caps
+- `character_skill_check_total.go`: static skill check totals from ranks, ability modifiers, class-skill metadata, and trained-only availability
 - `racial_hit_points.go`: creature rules to racial HP bridge
 
 Keep composition thin. If logic belongs to a lower domain, add it there only when the backlog item requires it.
@@ -89,20 +90,20 @@ Keep composition thin. If logic belongs to a lower domain, add it there only whe
 
 ## Next Backlog Path
 
-The next core-only backlog path is P9 core skill check totals.
+The next core-only backlog path is P10 core feat allocation and grants.
 
-The P8 core skill rank allocation path and P9 skill ability-key metadata are complete. Continue by composing static skill check totals from allocated ranks and ability scores.
+The P9 skill check total path is complete. Continue by creating explicit character feat slot and feat grant facts before composing feat allocation behavior.
 
 Check `BACKLOG.md` before starting any far-future non-core item.
 
-The path should prove skill ability keys, static rank-and-ability totals, class-skill bonuses, and trained-only availability without adding skill-use DCs or roll behavior. Armor check penalty application is deferred until equipped armor and shield facts exist.
+The path should prove general feat slots, supported racial and class bonus-feat grants, and selected-feat validation against existing prerequisite contexts without adding feat effects or combat bonus application.
 
 Out of scope for this path:
 
-- skill-use DCs, opposed checks, take 10/20, or aid another
-- situational modifiers, conditions, spells, or magic items
-- movement or combat action resolution
-- non-core skills or traits
+- retraining, feat replacement, or optional non-core feat systems
+- combat bonus application
+- item creation, crafting, or spell effects from feats
+- traits, archetypes, prestige classes, or non-core feats
 - full mutable character aggregate
 - broad folder or package reorganization
 
